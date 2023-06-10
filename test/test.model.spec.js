@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const {
   syncAndSeed,
-  models: { Artist },
+  models: { Artist, Album, Track, Song },
 } = require("../db/db");
 
 describe("Models", () => {
