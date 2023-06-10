@@ -1,5 +1,4 @@
-const express = require('express');
-const app = express()
+const app = require('./api/app')
 const { syncAndSeed } = require('./db/db')
 
 const port = process.env.PORT || 3000

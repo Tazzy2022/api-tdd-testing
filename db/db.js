@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-const { UUID, UUIDV4, STRING, INTEGER } = Sequelize;
+const { UUID, UUIDV4, STRING, INTEGER, VIRTUAL } = Sequelize;
 const db = new Sequelize(
   process.env.DATABASE_URL || "postgres://localhost/music_api_testing_db"
 );
@@ -13,11 +13,13 @@ const Artist = db.define("artist", {
   name: {
     type: STRING(255),
     allowNull: false,
-		unique: true,
+    unique: true,
     validate: {
       notEmpty: true,
     },
   },
+  // createdAt: false,
+  // updatedAt: false,
 });
 
 const Song = db.define("song", {
@@ -29,15 +31,23 @@ const Song = db.define("song", {
   name: {
     type: STRING(255),
     allowNull: false,
-		unique: true,
+    unique: true,
     validate: {
       notEmpty: true,
     },
   },
   duration: {
-    type: INTEGER
-  }
+    type: INTEGER,
+  },
 });
+
+// Song.findBySearchedWord = function() {
+//   return Song.findAll({
+//     where: {
+
+//     }
+//   })
+// }
 
 const Album = db.define("album", {
   id: {
@@ -48,11 +58,12 @@ const Album = db.define("album", {
   name: {
     type: STRING(255),
     allowNull: false,
-		unique: true,
+    unique: true,
     validate: {
       notEmpty: true,
     },
   },
+  // timestamps: false,
 });
 
 const Track = db.define("track", {
@@ -62,18 +73,19 @@ const Track = db.define("track", {
     primaryKey: true,
   },
   index: {
-    type: INTEGER
+    type: INTEGER,
   },
+  // timestamps: false,
 });
 
-Song.belongsTo(Artist)
-Artist.hasMany(Song)
+Song.belongsTo(Artist);
+Artist.hasMany(Song);
 
-Artist.hasMany(Album)
-Album.belongsTo(Artist)
+Artist.hasMany(Album);
+Album.belongsTo(Artist);
 
-Album.hasMany(Track)
-Song.hasMany(Track)
+Album.hasMany(Track);
+Song.hasMany(Track);
 
 const syncAndSeed = async () => {
   try {
@@ -102,19 +114,42 @@ const syncAndSeed = async () => {
       Track.create({ index: 5 }),
     ]);
 
+    (prnce.artistId = prince.id),
+      (smths.artistId = smiths.id),
+      (cre.artistId = cure.id),
+      (purple.artistId = prince.id),
+      (suedehead.artistId = smiths.id),
+      (friday.artistId = cure.id),
+      // two.songId = purple.id,
+      // four.songId = suedehead.id,
+      // five.songId = friday.id,
+      // two.songId = prnce.id,
+      // four.songId = smths.id,
+      // five.songId = cre.id
+
+      await Promise.all([
+        prnce.save(),
+        smths.save(),
+        cre.save(),
+        purple.save(),
+        suedehead.save(),
+        friday.save(),
+        // two.save(),
+        // four.save(),
+        // five.save(),
+      ]);
   } catch (error) {
     console.error(error);
   }
 };
 
 module.exports = {
-	syncAndSeed,
-	db,
-	models: {
-		Artist,
+  syncAndSeed,
+  db,
+  models: {
+    Artist,
     Song,
     Track,
-    Album
-	}
-}
-
+    Album,
+  },
+};
