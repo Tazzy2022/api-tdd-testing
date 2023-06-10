@@ -4,17 +4,7 @@ const {
 } = require("../db/db");
 const express = require("express");
 const app = express();
-
-const searchFunction = (word, array) => {
-  let songArray = []
-  for (let name in array) {
-    let current = array[name]
-    if(current.name.includes(word)) {
-      songArray.push(current)
-   }
-  }
-  return songArray
-}
+const searchFunction = require("./helper");
 
 app.use(express.json());
 
@@ -41,11 +31,11 @@ app.get("/api/albums", async (req, res) => {
 
 app.get("/api/songs/search/:term", async (req, res) => {
   try {
-    const term = req.params.term
+    const term = req.params.term;
     const songs = await Song.findAll({
       attributes: ["name"],
     });
-    const list = searchFunction(term, songs)
+    const list = searchFunction(term, songs);
     res.send(list);
   } catch (error) {
     console.error(error);
